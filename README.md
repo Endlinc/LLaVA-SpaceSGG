@@ -1,60 +1,114 @@
 # LLaVA-SpaceSGG
 
-This repository is the official implementation of [LLaVA-SpaceSGG: Visual Instruct Tuning for Open-vocabulary Scene Graph Generation with Enhanced Spatial Relations](https://arxiv.org/abs/2030.12345). 
+## Overview
 
->📋  Optional: include a graphic explaining your approach/main result, bibtex entry, link to demos, blog posts and tutorials
+LLaVA-SpaceSGG is a multimodal large language model (MLLM) designed to tackle the challenges of Scene Graph Generation (SGG) by improving spatial relation modeling and enabling open-vocabulary generalization. SGG converts visual scenes into structured graph representations, providing deeper scene understanding for complex vision tasks.
 
-## Requirements
+### Key Features
+- **Enhanced Spatial Relation Modeling**: Incorporates object locations, relations, and depth information for better spatial reasoning.
+- **Open-Vocabulary Generalization**: Excels in generating structured scene graphs in open-vocabulary contexts.
+- **Custom Dataset: SpaceSGG**: A novel instruction-tuning dataset that includes spatial descriptions, question-answering (QA), and conversations.
+- **Two-Stage Training Paradigm**: Improves model transferability to SGG tasks by leveraging MLLMs' native capabilities.
 
-To install requirements:
+### Achievements
+- **Performance**: LLaVA-SpaceSGG outperforms existing methods with a 4.5% improvement in recall and a 1.4% increase in mean recall.
+- **Dataset**: SpaceSGG is constructed using a pipeline that integrates object locations, spatial relations, and depth information from public datasets and open-source models.
 
-```setup
+---
+
+## Installation
+
+Clone the repository and set up the environment:
+```bash
+git clone https://github.com/your-repo/llava-spacesgg.git
+cd llava-spacesgg
 pip install -r requirements.txt
 ```
 
->📋  Describe how to set up the environment, e.g. pip/conda/docker commands, download datasets, etc...
+---
 
-## Training
+## Data Preparation
 
-To train the model(s) in the paper, run this command:
+### Stage 1: Generate Point Clouds and Layered Objects
+The scene graph description generation process in Stage 1 is built upon [the All-Seeing v2 project](https://github.com/OpenGVLab/all-seeing/tree/main/all-seeing-v2). Please refer to their repository for detailed instructions and implementation.
+1. **Generate Point Cloud from RGB and Depth Image**:
+   ```bash
+   python d2p.py --dataset-path dataset/coco --scale-factor 5000 --world-coordinates
+   ```
+2. **Cluster Objects by Depth into Layers**:
+   ```bash
+   python layers_aggregation.py \
+       --input-file asv2_level.json \
+       --depth-dir ./depth-output \
+       --mask-dir ./mask-output \
+       --output-file processed_annotations.json \
+       --dataset-base /home/ming/Datasets/all-seeing-v2/materials/ \
+       --data-prefix ../data/
+   ```
+3. **Generate Multiview Layered Objects**:
+   ```bash
+   python multiview_layers.py \
+       --input-file asv2_level.json \
+       --point-cloud-dir ./point_clouds \
+       --mask-dir ./mask-output \
+       --output-file processed_annotations.json \
+       --dataset-base /home/ming/Datasets/all-seeing-v2/materials/ \
+       --data-prefix ../data/
+   ```
 
-```train
-python train.py --input-data <path_to_data> --alpha 10 --beta 20
+### Stage 2: Generate Training Data Formats
+1. **Generate Layered Descriptions**:
+   ```bash
+   python llm_based_query.py \
+       --anno-file annotations.json \
+       --prompt-function create_layer_prompt \
+       --output-file layer_description.json
+   ```
+2. **Generate Question-Answering (QA) Data**:
+   ```bash
+   python llm_based_query.py \
+       --anno-file annotations.json \
+       --prompt-function create_between_prompt \
+       --output-file between_qa.json
+   ```
+3. **Generate Conversation Data**:
+   ```bash
+   python llm_based_query.py \
+       --anno-file annotations.json \
+       --prompt-function create_rotation_prompt \
+       --output-file rotation_prompts.json
+   ```
+
+---
+
+## Usage
+
+After preparing the dataset, train the LLaVA-SpaceSGG model using the scripts provide in project [LLaVA](https://github.com/haotian-liu/LLaVA) and [The All-Seeing Project V2](https://github.com/OpenGVLab/all-seeing/tree/main/all-seeing-v2)
+
+---
+
+## Citation
+
+If you use LLaVA-SpaceSGG or SpaceSGG dataset in your research, please cite our work:
+```bibtex
+@inproceedings{llava_spacesgg2025,
+  title={LLaVA-SpaceSGG: Visual Instruct Tuning for Open-vocabulary Scene Graph Generation with Enhanced Spatial Relations},
+  author={Your Name and Co-authors},
+  booktitle={Proceedings of WACV 2025},
+  year={2025}
+}
 ```
 
->📋  Describe how to train the models, with example commands on how to train the models in your paper, including the full training procedure and appropriate hyperparameters.
+---
 
-## Evaluation
+## License
 
-To evaluate my model on ImageNet, run:
+This project is licensed under the [Apache License](LICENSE).
 
-```eval
-python eval.py --model-file mymodel.pth --benchmark imagenet
-```
+---
 
->📋  Describe how to evaluate the trained models on benchmarks reported in the paper, give commands that produce the results (section below).
+## Contact
 
-## Pre-trained Models
+For questions or feedback, please contact [your_email@example.com](mailto:your_email@example.com).
 
-You can download pretrained models here:
-
-- [My awesome model](https://drive.google.com/mymodel.pth) trained on ImageNet using parameters x,y,z. 
-
->📋  Give a link to where/how the pretrained models can be downloaded and how they were trained (if applicable).  Alternatively you can have an additional column in your results table with a link to the models.
-
-## Results
-
-Our model achieves the following performance on :
-
-### [Image Classification on ImageNet](https://paperswithcode.com/sota/image-classification-on-imagenet)
-
-| Model name         | Top 1 Accuracy  | Top 5 Accuracy |
-| ------------------ |---------------- | -------------- |
-| My awesome model   |     85%         |      95%       |
-
->📋  Include a table of results from your paper, and link back to the leaderboard for clarity and context. If your main result is a figure, include that figure and link to the command or notebook to reproduce it. 
-
-
-## Contributing
-
->📋  Pick a licence and describe how to contribute to your code repository. 
+Let me know if you need adjustments!
