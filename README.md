@@ -1,4 +1,5 @@
 # LLaVA-SpaceSGG
+[Paper](https://arxiv.org/abs/2412.06322) | [Dataset](https://huggingface.co/datasets/Endlinc/SpaceSGG) | [Benchmark](https://huggingface.co/datasets/Endlinc/SpaceSGG-Val) | Models
 
 ## Overview
 
