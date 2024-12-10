@@ -109,6 +109,6 @@ This project is licensed under the [Apache License](LICENSE).
 
 ## Contact
 
-For questions or feedback, please contact [your_email@example.com](mailto:your_email@example.com).
+For questions or feedback, please contact [parasolohalo@gmail.com](mailto:parasolohalo@gmail.com).
 
 Let me know if you need adjustments!
