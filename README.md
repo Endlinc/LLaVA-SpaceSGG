@@ -20,8 +20,8 @@ LLaVA-SpaceSGG is a multimodal large language model (MLLM) designed to tackle th
 
 Clone the repository and set up the environment:
 ```bash
-git clone https://github.com/your-repo/llava-spacesgg.git
-cd llava-spacesgg
+git clone https://github.com/Endlinc/LLaVA-SpaceSGG.git
+cd LLaVA-SpaceSGG
 pip install -r requirements.txt
 ```
 
