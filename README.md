@@ -94,7 +94,7 @@ If you use LLaVA-SpaceSGG or SpaceSGG dataset in your research, please cite our 
 ```bibtex
 @inproceedings{llava_spacesgg2025,
   title={LLaVA-SpaceSGG: Visual Instruct Tuning for Open-vocabulary Scene Graph Generation with Enhanced Spatial Relations},
-  author={Your Name and Co-authors},
+  author={Mingjie Xu, Mengyang Wu, Yuzhi Zhao, Jason Chun Lok Li, Weifeng Ou},
   booktitle={Proceedings of WACV 2025},
   year={2025}
 }
